@@ -23,50 +23,6 @@ function responsive_menus_help($path, $arg) {
 }
 
 /**
- * Implements hook_ctools_plugin_api().
- */
-//function responsive_menus_ctools_plugin_api($module, $api) {
-//  if ($module == 'context' && $api == 'plugins') {
-//    return array('version' => 3);
-//  }
-//}
-
-/**
- * Implements hook_context_registry().
- */
-//function responsive_menus_context_registry() {
-//  $registry = array();
-//
-//  $registry['reactions'] = array(
-//    'responsive_menus_general' => array(
-//      'title' => t('Responsive Menus'),
-//      'description' => t('Add & configure a Responsive Menus module reaction.'),
-//      'plugin' => 'responsive_menus_context_reaction_general',
-//    ),
-//  );
-//
-//  return $registry;
-//}
-
-/**
- * Implements hook_context_plugins().
- */
-//function responsive_menus_context_plugins() {
-//  $plugins = array();
-//
-//  $plugins['responsive_menus_context_reaction_general'] = array(
-//    'handler' => array(
-//      'path' => drupal_get_path('module', 'responsive_menus') . '/plugins/context',
-//      'file' => 'responsive_menus_context_reaction_general.inc',
-//      'class' => 'responsive_menus_context_reaction_general',
-//      'parent' => 'context_reaction',
-//    ),
-//  );
-//
-//  return $plugins;
-//}
-
-/**
  * Implements hook_libraries_info().
  *
  * @note : Libraries 2.x
@@ -249,43 +205,6 @@ function responsive_menus_style_load($style, $jq_update_ignore) {
 }
 
 /**
- * Slight modification of variable_get for context and other usage.
- *
- * @param string $name
- *   Name of the variable.
- * @param mixed $default
- *   The variable's default fallback value.
- * @param array $rm_defaults
- *   The array of values that context (and possibly others) will pass.
- */
-//function responsive_menus_var_get($name, $default, $rm_defaults = array()) {
-//  if (!empty($rm_defaults) && !empty($rm_defaults[$name])) {
-//    return $rm_defaults[$name];
-//  }
-//  return variable_get($name, $default);
-//}
-
-/**
- * Return array of selectors for JS settings.
- *
- * @return array
- *   Array of settings to pass with drupal_add_js().
- */
-//function responsive_menus_explode_list($style_var, $default, $js_defaults = array()) {
-//  $selectors = responsive_menus_var_get($style_var, $default, $js_defaults);
-//  $delimiter = ', ';
-//  // Strip out carriage returns.
-//  $selectors = str_replace("\r", '', $selectors);
-//  // Replace new lines with delimiter.
-//  $selectors = str_replace("\n", $delimiter, $selectors);
-//  // Explode to include original delimited.
-//  $values = explode($delimiter, $selectors);
-//  $values = array_filter($values);
-//
-//  return $values;
-//}
-
-/**
  * Recursively glob for directories.
  *
  * @param string $directory
@@ -363,40 +282,11 @@ function responsive_menus_page_attachments(array &$attachements) {
   }
   $data['execute_index']++;
 
-  $js_settings = array();
-//  $js_files = array();
-//  $css_files = array();
-//  // Load JS files from folder.
-//  if (!empty($style_info['js_folder'])) {
-//    $js_files = responsive_menus_glob_files($style_info['js_folder'], 'js');
-//  }
-//  // Load CSS files from folder.
-//  if (!empty($style_info['css_folder'])) {
-//    $css_files = responsive_menus_glob_files($style_info['css_folder'], 'css');
-//  }
-//  // Load individual JS files.
-//  if (!empty($style_info['js_files'])) {
-//    $js_files = array_unique(array_merge($js_files, $style_info['js_files']));
-//  }
-//  // Load individual CSS files.
-//  if (!empty($style_info['css_files'])) {
-//    $css_files = array_unique(array_merge($css_files, $style_info['css_files']));
-//  }
-//  // Add JS files.
-//  if (!empty($js_files)) {
-//    foreach ($js_files as $js_file) {
-//      drupal_add_js($js_file);
-//    }
-//  }
-//  // Add CSS files.
-//  if (!empty($css_files)) {
-//    foreach ($css_files as $css_file) {
-//      drupal_add_css($css_file);
-//    }
-//  }
+  // Add library.
+  $attachements['#attached']['library'][] = $style_plugin->getPluginDefinition()['library'];
 
   // Add JS settings.
-  $js_settings[$data['execute_index']] = $style_plugin->jsSettings([]);
+  $js_settings[$data['execute_index']] = $style_plugin->getJsSettings();
   $js_settings[$data['execute_index']]['responsive_menus_style'] = $style;
   \Drupal::moduleHandler()->alter('responsive_menus_execute', $js_settings);
   $attachements['#attached']['drupalSettings']['responsive_menus'] = $js_settings;

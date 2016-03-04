@@ -81,7 +81,7 @@
   Drupal.behaviors.responsive_menus = {
     attach: function (context, settings) {
       settings.responsive_menus = settings.responsive_menus || {};
-      $('body').once('responsive-menus-load', function() {
+      $('body').once('responsive-menus-load').each(function() {
         // Only doing this themes that don't include a viewport attribute.
         // e.g. Bartik for testing out-of-the-box... yeah, stupid.
         if (!$('meta[name=viewport]').length > 0) {

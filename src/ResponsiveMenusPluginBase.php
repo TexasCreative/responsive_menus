@@ -7,29 +7,58 @@
 
 namespace Drupal\responsive_menus;
 
+use Drupal\Core\Field\PluginSettingsBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\PluginBase;
-use Drupal\responsive_menus\ResponsiveMenusPluginInterface;
 
 /**
  * Class ResponsiveMenusPluginBase.
  *
- * @package Drupal\ckeditor
+ * @package Drupal\responsive_menus
  */
-abstract class ResponsiveMenusPluginBase extends PluginBase implements ResponsiveMenusPluginInterface {
+abstract class ResponsiveMenusPluginBase extends PluginSettingsBase implements ResponsiveMenusPluginInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public static function getSelectorInfo() {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function jsSettings(array $js_defaults) {
+  public function getJsSettings() {
     return [];
+  }
+
+  /**
+   * Return array of selectors for JS settings.
+   *
+   * @params string $name
+   *   The settings name.
+   *
+   * @return array
+   *   Array of settings to pass with drupal_add_js().
+   */
+  protected function getSettingArray($name) {
+    $selectors = $this->getSetting($name);
+    $delimiter = ', ';
+    // Strip out carriage returns.
+    $selectors = str_replace("\r", '', $selectors);
+    // Replace new lines with delimiter.
+    $selectors = str_replace("\n", $delimiter, $selectors);
+    // Explode to include original delimited.
+    $values = explode($delimiter, $selectors);
+    $values = array_filter($values);
+
+    return $values;
   }
 
 }

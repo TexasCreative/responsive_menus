@@ -122,15 +122,15 @@ class ResponsiveMenusAdminForm extends ConfigFormBase {
       '#tree'        => TRUE,
     ];
     // Which selector to use info.
-//    if (!empty($style_info['selector'])) {
-//      $form['responsive_menus_style_settings']['selector_info'] = [
-//        '#type'   => 'item',
-//        '#title'  => t('Selector(s) to use for this style:'),
-//        '#markup' => '<div class="messages status">' . $style_info['selector'] . '</div>',
-//      ];
-//    }
+    if (!empty($style_plugin->getSelectorInfo())) {
+      $form['responsive_menus_style_settings']['selector_info'] = [
+        '#type'   => 'item',
+        '#title'  => t('Selector(s) to use for this style:'),
+        '#markup' => '<div class="messages status">' . $style_plugin->getSelectorInfo() . '</div>',
+      ];
+    }
     // Build additional style settings from style plugins.
-    foreach ($style_plugin->form([], $form_state) as $name => $element) {
+    foreach ($style_plugin->settingsForm([], $form_state) as $name => $element) {
       $form['responsive_menus_style_settings'][$name] = $element;
     }
 

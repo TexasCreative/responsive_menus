@@ -36,4 +36,11 @@ class ResponsiveMenus extends Plugin {
    */
   public $label;
 
+  /**
+   * The plugin library.
+   *
+   * @var string
+   */
+  public $library;
+
 }

@@ -17,6 +17,7 @@ use Drupal\responsive_menus\ResponsiveMenusPluginInterface;
  * @ResponsiveMenus(
  *   id = "responsive_menus_simple",
  *   label = @Translation("Simple expanding"),
+ *   library = "responsive_menus/simple"
  * )
  */
 class ResponsiveMenusSimple extends ResponsiveMenusPluginBase implements ResponsiveMenusPluginInterface {
@@ -24,55 +25,81 @@ class ResponsiveMenusSimple extends ResponsiveMenusPluginBase implements Respons
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public static function getSelectorInfo() {
+    return t('Anything.  Example: Given <code>@code</code> you could use !use', [
+      '@ul'   => '<ul>',
+      '@code' => '<div id="parent-div"> <ul class="menu"> </ul> </div>',
+      '!use'  => '<strong>#parent-div or .menu</strong>',
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return [
+      'responsive_menus_simple_absolute'      => 1,
+      'responsive_menus_disable_mouse_events' => 0,
+      'responsive_menus_remove_attributes'    => 1,
+      'responsive_menus_css_selectors'        => '#main-menu',
+      'responsive_menus_simple_text'          => '☰ Menu',
+      'responsive_menus_media_size'           => 768,
+      'responsive_menus_media_unit'           => 'px',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $form['responsive_menus_simple_absolute'] = [
-      '#type'        => 'checkboxes',
-      '#options'     => [1 => t('Use absolute positioning?')],
-//    '#default_value' => variable_get('responsive_menus_simple_absolute', [1 => 1]),
-      '#description' => t('Using absolute, the menu will open over the page rather than pushing it down.'),
+      '#type'          => 'checkbox',
+      '#title'         => t('Use absolute positioning?'),
+      '#default_value' => $this->getSetting('responsive_menus_simple_absolute'),
+      '#description'   => t('Using absolute, the menu will open over the page rather than pushing it down.'),
     ];
 
     $form['responsive_menus_disable_mouse_events'] = [
-      '#type'        => 'checkboxes',
-      '#options'     => [1 => t('Disable other mouse events?')],
-//    '#default_value' => variable_get('responsive_menus_disable_mouse_events', [1 => 0]),
-      '#description' => t('Disable things like drop-down menus on hover.'),
+      '#type'          => 'checkbox',
+      '#title'         => t('Disable other mouse events?'),
+      '#default_value' => $this->getSetting('responsive_menus_disable_mouse_events'),
+      '#description'   => t('Disable things like drop-down menus on hover.'),
     ];
 
     $form['responsive_menus_remove_attributes'] = [
-      '#type'        => 'checkboxes',
-      '#options'     => [1 => t('Remove other classes & IDs when responded?')],
-//    '#default_value' => variable_get('responsive_menus_remove_attributes', [1 => 1]),
-      '#description' => t('Helps to ensure styling of menu.'),
+      '#type'          => 'checkbox',
+      '#title'         => t('Remove other classes & IDs when responded?'),
+      '#default_value' => $this->getSetting('responsive_menus_remove_attributes'),
+      '#description'   => t('Helps to ensure styling of menu.'),
     ];
 
     $form['responsive_menus_css_selectors'] = [
-      '#type'        => 'textarea',
-      '#title'       => t('Selectors for which menus to responsify'),
-//    '#default_value' => variable_get('responsive_menus_css_selectors', '#main-menu'),
-      '#description' => t('Enter CSS/jQuery selectors of menus to responsify.  Comma separated or 1 per line'),
+      '#type'          => 'textarea',
+      '#title'         => t('Selectors for which menus to responsify'),
+      '#default_value' => $this->getSetting('responsive_menus_css_selectors'),
+      '#description'   => t('Enter CSS/jQuery selectors of menus to responsify.  Comma separated or 1 per line'),
     ];
 
     $form['responsive_menus_simple_text'] = [
-      '#type'  => 'textarea',
-      '#title' => t('Text or HTML for the menu toggle button'),
-//    '#default_value' => variable_get('responsive_menus_simple_text', '☰ Menu'),
+      '#type'          => 'textarea',
+      '#title'         => t('Text or HTML for the menu toggle button'),
+      '#default_value' => $this->getSetting('responsive_menus_simple_text'),
     ];
 
     $form['responsive_menus_media_size'] = [
-      '#type'        => 'textfield',
-      '#title'       => t('Screen width to respond to'),
-      '#size'        => 5,
-//    '#default_value' => variable_get('responsive_menus_media_size', 768),
-      '#description' => t('Width when we swap out responsive menu e.g. 768'),
+      '#type'          => 'number',
+      '#title'         => t('Screen width to respond to'),
+      '#size'          => 5,
+      '#default_value' => $this->getSetting('responsive_menus_media_size'),
+      '#description'   => t('Width when we swap out responsive menu e.g. 768'),
     ];
 
     $form['responsive_menus_media_unit'] = [
-      '#type'        => 'select',
-      '#title'       => t('Width unit'),
-//    '#default_value' => variable_get('responsive_menus_media_unit', 'px'),
-      '#options'     => ['px' => 'px', 'em' => 'em'],
-      '#description' => t('Unit for the width above'),
+      '#type'          => 'select',
+      '#title'         => t('Width unit'),
+      '#default_value' => $this->getSetting('responsive_menus_media_unit'),
+      '#options'       => ['px' => 'px', 'em' => 'em'],
+      '#description'   => t('Unit for the width above'),
     ];
 
     return $form;
@@ -81,41 +108,18 @@ class ResponsiveMenusSimple extends ResponsiveMenusPluginBase implements Respons
   /**
    * {@inheritdoc}
    */
-  public function jsSettings(array $js_defaults) {
+  public function getJsSettings() {
     $js_settings = [
-//      'toggler_text' => responsive_menus_var_get('responsive_menus_simple_text', '☰ Menu', $js_defaults),
-//      'selectors'    => responsive_menus_explode_list('responsive_menus_css_selectors', '#main-menu', $js_defaults),
-//      'media_size'   => responsive_menus_var_get('responsive_menus_media_size', 768, $js_defaults),
-//      'media_unit'   => responsive_menus_var_get('responsive_menus_media_unit', 'px', $js_defaults),
+      'toggler_text'         => $this->getSetting('responsive_menus_simple_text'),
+      'selectors'            => $this->getSettingArray('responsive_menus_css_selectors'),
+      'media_size'           => $this->getSetting('responsive_menus_media_size'),
+      'media_unit'           => $this->getSetting('responsive_menus_media_unit'),
+      'absolute'             => $this->getSetting('responsive_menus_simple_absolute'),
+      'disable_mouse_events' => $this->getSetting('responsive_menus_disable_mouse_events'),
+      'remove_attributes'    => $this->getSetting('responsive_menus_remove_attributes'),
     ];
-
-//    $absolute = responsive_menus_var_get('responsive_menus_simple_absolute', [1 => 1], $js_defaults);
-//    $disable_mouse = responsive_menus_var_get('responsive_menus_disable_mouse_events', [1 => 0], $js_defaults);
-//    $remove_attributes = responsive_menus_var_get('responsive_menus_remove_attributes', [1 => 1], $js_defaults);
-//    if ($absolute[1]) {
-//      $js_settings['absolute'] = TRUE;
-//    }
-//    if ($disable_mouse[1]) {
-//      $js_settings['disable_mouse_events'] = TRUE;
-//    }
-//    if ($remove_attributes[1]) {
-//      $js_settings['remove_attributes'] = TRUE;
-//    }
 
     return $js_settings;
   }
 
 }
-
-//'responsive_menus_simple'  => [
-//  'form'        => 'responsive_menus_simple_style_settings',
-//  'js_files'    => [$path . '/responsive_menus_simple/js/responsive_menus_simple.js'],
-//  'css_files'   => [$path . '/responsive_menus_simple/css/responsive_menus_simple.css'],
-//  'js_settings' => 'responsive_menus_simple_style_js_settings',
-//  'file'        => $path . '/responsive_menus_simple/responsive_menus_simple.inc',
-//  'selector'    => t('Anything.  Example: Given <code>@code</code> you could use !use', [
-//    '@ul'   => '<ul>',
-//    '@code' => '<div id="parent-div"> <ul class="menu"> </ul> </div>',
-//    '!use'  => '<strong>#parent-div or .menu</strong>',
-//  ]),
-//],

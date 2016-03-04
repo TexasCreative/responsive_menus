@@ -8,13 +8,19 @@
 namespace Drupal\responsive_menus;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Field\PluginSettingsInterface;
 
 /**
  * Interface ResponsiveMenusInterface.
  *
  * @package Drupal\responsive_menus
  */
-interface ResponsiveMenusPluginInterface {
+interface ResponsiveMenusPluginInterface extends PluginSettingsInterface {
+
+  /**
+   * Provide UI with plugins selector information.
+   */
+  public static function getSelectorInfo();
 
   /**
    * Form constructor.
@@ -27,13 +33,14 @@ interface ResponsiveMenusPluginInterface {
    * @return array
    *   The form structure.
    */
-  public function form(array $form, FormStateInterface $form_state);
+  public function settingsForm(array $form, FormStateInterface $form_state);
 
   /**
-   * @param array $js_defaults
+   * Get Drupal Javscript settings array.
    *
    * @return array
+   *   The Javascript settings array.
    */
-  public function jsSettings(array $js_defaults);
+  public function getJsSettings();
 
 }
