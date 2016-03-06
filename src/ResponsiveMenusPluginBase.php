@@ -20,6 +20,15 @@ abstract class ResponsiveMenusPluginBase extends PluginSettingsBase implements R
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->settings = $configuration['settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getSelectorInfo() {
     return '';
   }

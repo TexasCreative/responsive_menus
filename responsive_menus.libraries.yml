@@ -1,4 +1,4 @@
-simple:
+responsive_menus_simple:
   version: VERSION
   js:
     styles/responsive_menus_simple/js/responsive_menus_simple.js: {}

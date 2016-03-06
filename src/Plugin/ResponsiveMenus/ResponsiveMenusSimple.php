@@ -17,7 +17,7 @@ use Drupal\responsive_menus\ResponsiveMenusPluginInterface;
  * @ResponsiveMenus(
  *   id = "responsive_menus_simple",
  *   label = @Translation("Simple expanding"),
- *   library = "responsive_menus/simple"
+ *   library = "responsive_menus/responsive_menus_simple"
  * )
  */
 class ResponsiveMenusSimple extends ResponsiveMenusPluginBase implements ResponsiveMenusPluginInterface {

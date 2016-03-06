@@ -13,3 +13,6 @@ responsive_menus.configuration:
     ignore_admin:
       type: bool
       label: 'Ignore admin pages?'
+    style_settings:
+      type: mapping
+      label: 'Style settings'

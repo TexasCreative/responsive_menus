@@ -99,7 +99,7 @@ class ResponsiveMenusAdminForm extends ConfigFormBase {
 
 //    $jq_update_ignore = $form['responsive_menus_no_jquery_update']['#default_value'];
 //    $style_info = responsive_menus_style_load($current_style, $jq_update_ignore);
-    $style_plugin = $this->pluginManager->createInstance($current_style);
+    $style_plugin = $this->pluginManager->createInstance($current_style, ['settings' => $config->get('style_settings')]);
 
     $form['responsive_menus_style'] = [
       '#type'          => 'select',
@@ -168,24 +168,8 @@ class ResponsiveMenusAdminForm extends ConfigFormBase {
       ->set('style', $values['responsive_menus_style'])
       ->set('no_jquery_update', $values['responsive_menus_no_jquery_update'])
       ->set('ignore_admin', $values['responsive_menus_ignore_admin'])
+      ->set('style_settings', $values['responsive_menus_style_settings'])
       ->save();
-
-//  // Exclude unnecessary elements.
-//  form_state_values_clean($form_state);
-//
-//  foreach ($form_state['values'] as $key => $value) {
-//    if (is_array($value) && isset($form_state['values']['array_filter'])) {
-//      $value = array_keys(array_filter($value));
-//    }
-//    if ($key == 'responsive_menus_style_settings') {
-//      foreach ($value as $style_key => $style_value) {
-//        variable_set($style_key, $style_value);
-//      }
-//    }
-//    else {
-//      variable_set($key, $value);
-//    }
-//  }
 
 //  // Clear libraries cache if Sidr style in use to allow theme to be updated.
 //  if ($form_state['values']['responsive_menus_style'] == 'sidr') {

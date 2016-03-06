@@ -205,55 +205,9 @@ function responsive_menus_style_load($style, $jq_update_ignore) {
 }
 
 /**
- * Recursively glob for directories.
- *
- * @param string $directory
- *   Directory to glob.
- * @param array $directories
- *   Increasing array of matching directories.
- */
-//function responsive_menus_glob_recursive($directory, &$directories = array()) {
-//  foreach (glob($directory, GLOB_ONLYDIR | GLOB_NOSORT) as $folder) {
-//    $directories[] = $folder;
-//    responsive_menus_glob_recursive("{$folder}/*", $directories);
-//  }
-//}
-
-/**
- * Recursively search through directories for files with given extension.
- *
- * @param string $directory
- *   Directory to search.
- * @param string $extension
- *   File extensions to look for.
- *
- * @return array
- *   Array of matching files.
- */
-//function responsive_menus_glob_files($directory, $extension) {
-//  $directories = (empty($directories) ? array() : $directories);
-//  responsive_menus_glob_recursive($directory, $directories);
-//  $files = array();
-//  foreach ($directories as $directory) {
-//    $files = array_merge($files, glob("{$directory}/*.{$extension}"));
-//  }
-//
-//  return $files;
-//}
-
-/**
  * Implements hook_page_attachments().
  */
 function responsive_menus_page_attachments(array &$attachements) {
-//  // Context rules.
-//  if (\Drupal::moduleHandler()->moduleExists('context')) {
-//    if ($plugin = context_get_plugin('reaction', 'responsive_menus_general')) {
-//      $plugin->execute();
-//    }
-//  }
-//  // Non-context additions.
-//  responsive_menus_execute();
-
   $config = \Drupal::config('responsive_menus.configuration');
 
   // Load our style.
@@ -271,7 +225,7 @@ function responsive_menus_page_attachments(array &$attachements) {
 //  $style_info = responsive_menus_style_load($style, $jq_update_ignore);
   $plugin_manager = \Drupal::service('plugin.manager.responsive_menus');
   /** @var \Drupal\responsive_menus\ResponsiveMenusPluginInterface $style_plugin */
-  $style_plugin = $plugin_manager->createInstance($style);
+  $style_plugin = $plugin_manager->createInstance($style, ['settings' => $config->get('style_settings')]);
   if (!$style_plugin) {
     return;
   }
@@ -291,13 +245,3 @@ function responsive_menus_page_attachments(array &$attachements) {
   \Drupal::moduleHandler()->alter('responsive_menus_execute', $js_settings);
   $attachements['#attached']['drupalSettings']['responsive_menus'] = $js_settings;
 }
-
-///**
-// * Final execution for Responsive Menus.  Add any js/css and settings required.
-// *
-// * @param null $style
-// * @param array $js_defaults
-// */
-//function responsive_menus_execute($style = NULL, $js_defaults = []) {
-//
-//}
