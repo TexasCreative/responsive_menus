@@ -1,6 +1,6 @@
 {
     "name": "texascreative/responsive_menus",
-    "type": "project",
+    "type": "drupal-module",
     "minimum-stability": "dev",
     "require": {}
 }
